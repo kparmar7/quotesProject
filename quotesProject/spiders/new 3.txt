@@ -1,0 +1,22 @@
+import scrapy
+
+
+class DictionarySpider(scrapy.Spider):
+    name = 'dictionary'
+    #allowed_domains = ['https://www.ldoceonline.com/browse/english/']
+    next_number_1 = 'a'
+    start_urls = ['https://www.ldoceonline.com/browse/english/0-9/']
+    
+
+    def parse(self, response):
+        print( response.url, '$$$$$$$$$$$$$$$$$$$$$$$')
+
+        pageNumber = response.url.rsplit("/", 2)[1]
+        yield {pageNumber: { pageNumber : p0_9 } }
+
+        next_page_1 = "https://www.ldoceonline.com/browse/english/" + str(DictionarySpider.next_number_1) + "/"
+        print(next_page_1, "next_page::::::::::::::::::::::::", DictionarySpider.next_number_1)
+
+        if DictionarySpider.next_number_1 <= 'z':
+            DictionarySpider.next_number_1 = chr(ord(DictionarySpider.next_number_1) + 1)
+            yield response.follow(next_page_1,  callback=self.parse)
